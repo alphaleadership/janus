@@ -21,7 +21,7 @@ def gen(prompt):
             repo_id,
             cache_dir=cache_dir,
             dtype=torch.bfloat16,
-            device='cuda',
+            device='cpu',
         )
         t1 = time.time()
         log.info(f'load time={t1-t0}')
