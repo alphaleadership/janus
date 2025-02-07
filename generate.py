@@ -12,9 +12,9 @@ log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-if __name__ == "__main__":
+
     
-    def gen(prompt):
+def gen(prompt):
         log.info(f'prompt={prompt}')
         t0 = time.time()
         pipe = JanusPipeline(
