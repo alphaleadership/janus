@@ -9,4 +9,3 @@ accelerate
 diffusers
 transformers
 Pillow
-flash_attn
