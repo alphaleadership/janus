@@ -1,2 +1,2 @@
-import os 
-os.run("python generate.py")
+from generate import gen 
+gen("test")
