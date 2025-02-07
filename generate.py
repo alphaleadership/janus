@@ -7,7 +7,7 @@ from model import JanusPipeline
 
 # repo_id = 'deepseek-ai/Janus-1.3B'
 repo_id = 'deepseek-ai/Janus-Pro-7B'
-cache_dir = '/mnt/models/huggingface'
+cache_dir = './mnt/models/huggingface'
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
