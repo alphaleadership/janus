@@ -1,2 +1,2 @@
 import os 
-os.start("python generate.py")
+os.run("python generate.py")
