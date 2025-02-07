@@ -24,7 +24,7 @@ vl_gpt: MultiModalityCausalLM = None
 
 
 class JanusPipeline(DiffusionPipeline):
-    def __init__(self, repo_id: str, cache_dir: str, dtype: torch.dtype = torch.float16, device: torch.device = 'cuda'):
+    def __init__(self, repo_id: str, cache_dir: str, dtype: torch.dtype = torch.float16, device: torch.device = 'cpu'):
         global vl_chat_processor, vl_gpt # pylint: disable=global-statement
         self.compute_device = device
         self.compute_dtype = dtype
