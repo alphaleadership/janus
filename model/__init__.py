@@ -24,8 +24,8 @@ vl_gpt: MultiModalityCausalLM = None
 
 
 class JanusPipeline(DiffusionPipeline):
-    def __init__(self, repo_id: str, cache_dir: str, dtype: torch.dtype = torch.float16, device: torch.device = 'cpu'):
-        global vl_chat_processor, vl_gpt # pylint: disable=global-statement
+    def __init__(self, repo_id: str, cache_dir: str, dtype: torch.dtype = torch.float16, device: torch.device = 'cuda'):
+        global vl_chat_processor, vl_gpt# pylint: disable=global-statement
         self.compute_device = device
         self.compute_dtype = dtype
         super().__init__()
@@ -40,14 +40,17 @@ class JanusPipeline(DiffusionPipeline):
                 torch_dtype=self.compute_dtype,
                 low_cpu_mem_usage=True,
                 device_map="auto",
-                # attn_implementation='sdpa' # sdpa, eager, flex_attention, flash_attention_2 # modified in class constructor
+                 #attn_implementation='sdpa' # sdpa, eager, flex_attention, flash_attention_2 # modified in class constructor
             )
-            vl_gpt = vl_gpt.to(device=self.compute_device, dtype=self.compute_dtype)
+            print(self.compute_device)
+            print(self.compute_dtype)
+         
             vl_gpt = vl_gpt.eval()
 
     @torch.inference_mode()
     def __call__(self,
                  prompt: str,
+                 low_cpu_mem_usage=True,
                  temperature: float = 1.0,
                  num_images_per_prompt: int = 1,
                  guidance_scale: float = 5,
@@ -81,9 +84,10 @@ class JanusPipeline(DiffusionPipeline):
         outputs = None
 
         # generate loop
-        vl_gpt.language_model.model.to(self.compute_device)
+
         for i in trange(image_token_num_per_image):
             outputs = vl_gpt.language_model.model(inputs_embeds=inputs_embeds, use_cache=True, past_key_values=outputs.past_key_values if i != 0 else None)
+            #print(i)
             hidden_states = outputs.last_hidden_state
             logits = vl_gpt.gen_head(hidden_states[:, -1, :])
             logit_cond = logits[0::2, :]
@@ -95,7 +99,7 @@ class JanusPipeline(DiffusionPipeline):
             next_token = torch.cat([next_token.unsqueeze(dim=1), next_token.unsqueeze(dim=1)], dim=1).view(-1)
             img_embeds = vl_gpt.prepare_gen_img_embeds(next_token)
             inputs_embeds = img_embeds.unsqueeze(dim=1)
-        vl_gpt.language_model.model.to('cpu')
+        #vl_gpt.language_model.model.to('cpu')
 
         # decode images
         dec = vl_gpt.gen_vision_model.decode_code(generated_tokens.to(dtype=torch.int), shape=[num_images_per_prompt, 8, width // patch_size, height // patch_size])

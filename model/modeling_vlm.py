@@ -193,7 +193,7 @@ class MultiModalityPreTrainedModel(PreTrainedModel):
 
 class MultiModalityCausalLM(MultiModalityPreTrainedModel):
     def __init__(self, config: MultiModalityConfig):
-        config._attn_implementation = 'sdpa' # 'flash_attention_2'
+        config._attn_implementation = 'flash_attention_2' # 'flash_attention_2'
         super().__init__(config)
 
         vision_config = config.vision_config
