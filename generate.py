@@ -41,3 +41,4 @@ def gen(prompt):
             fn = f'./tmp/janus-{i+nombre_fichiers}.png'
             log.info(f'image={i} file={fn}')
             image.save(fn)
+gen("quand tu quitte ton post tu le verrouille")
