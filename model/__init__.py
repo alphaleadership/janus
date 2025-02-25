@@ -80,7 +80,7 @@ class JanusPipeline(DiffusionPipeline):
             if i % 2 != 0:
                 tokens[i, 1:-1] = vl_chat_processor.pad_id
         inputs_embeds = vl_gpt.language_model.get_input_embeddings()(tokens)
-        generated_tokens = torch.zeros((num_images_per_prompt, image_token_num_per_image), dtype=torch.int)cpu()
+        generated_tokens = torch.zeros((num_images_per_prompt, image_token_num_per_image), dtype=torch.int).cpu()
         outputs = None
 
         # generate loop
