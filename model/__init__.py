@@ -74,13 +74,13 @@ class JanusPipeline(DiffusionPipeline):
         prompt = sft_format + vl_chat_processor.image_start_tag
         input_ids = vl_chat_processor.tokenizer.encode(prompt)
         input_ids = torch.LongTensor(input_ids)
-        tokens = torch.zeros((num_images_per_prompt*2, len(input_ids)), dtype=torch.int).cuda()
+        tokens = torch.zeros((num_images_per_prompt*2, len(input_ids)), dtype=torch.int).cpu()
         for i in range(num_images_per_prompt*2):
             tokens[i, :] = input_ids
             if i % 2 != 0:
                 tokens[i, 1:-1] = vl_chat_processor.pad_id
         inputs_embeds = vl_gpt.language_model.get_input_embeddings()(tokens)
-        generated_tokens = torch.zeros((num_images_per_prompt, image_token_num_per_image), dtype=torch.int).cuda()
+        generated_tokens = torch.zeros((num_images_per_prompt, image_token_num_per_image), dtype=torch.int)cpu()
         outputs = None
 
         # generate loop
